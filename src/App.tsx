@@ -1,35 +1,67 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {useEffect, useState} from 'react';
+import {Countries} from './type';
+
+import Appbar from './components/Appbar/Appbar';
+import CountryItem from './components/CountryItem/CountryItem';
+import axios from 'axios';
+import './components/CountryItem/CountryItem.css';
+import FullCountryInfo from './components/FullCountryInfo/FullCountryInfo';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [countries, setCountries] = useState<Countries[]>([]);
+  const [alpha3Code, setalpha3Code] = useState<string|null>(null);
+  const fetchData = async () => {
+    const URL = 'https://restcountries.com/v2/all?fields=alpha3Code,name';
+    const countryResponse = await axios.get<Countries[]>(URL);
+    const newArray = countryResponse.data.map(country => {
+      return {
+        name: country.name,
+        alpha3Code: country.alpha3Code
+      };
+    });
+    setCountries(newArray);
+  };
+
+  useEffect(() => {
+    void fetchData();
+  }, []);
+
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <header>
+        <Appbar/>
+      </header>
+      <main className="container-fluid">
+        <section>
+          <div className="row mt-2">
+            <div className="col-4">
+              <div className="country-list">
+                <ul className="list-group">
+                  {
+                    countries.map(item => (
+                        <CountryItem
+                          key={Math.random()}
+                          name={item.name}
+                          onClick={() => {
+                            setalpha3Code(item.alpha3Code);
+                          }}
+                        />
+                      )
+                    )
+                  }
+                </ul>
+              </div>
+            </div>
+            <div className="col">
+              <FullCountryInfo key={Math.random()} alpha3Code={alpha3Code}/>
+            </div>
+          </div>
+        </section>
+      </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
