@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {Countries} from './type';
 
 import Appbar from './components/Appbar/Appbar';
@@ -23,6 +23,11 @@ function App() {
     setCountries(newArray);
   };
 
+  const setCode = useCallback((code:string) => {
+    setAlpha3Code(code);
+  }, []);
+
+
   useEffect(() => {
     void fetchData();
   }, []);
@@ -42,11 +47,10 @@ function App() {
                   {
                     countries.map(item => (
                         <CountryItem
-                          key={Math.random()}
+                          key={item.alpha3Code}
                           name={item.name}
-                          onClick={() => {
-                            setAlpha3Code(item.alpha3Code);
-                          }}
+                          alpha3Code ={item.alpha3Code}
+                          onClick={setCode}
                         />
                       )
                     )
