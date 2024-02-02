@@ -10,7 +10,7 @@ import FullCountryInfo from './components/FullCountryInfo/FullCountryInfo';
 
 function App() {
   const [countries, setCountries] = useState<Countries[]>([]);
-  const [alpha3Code, setalpha3Code] = useState<string|null>(null);
+  const [alpha3Code, setAlpha3Code] = useState<string|null>(null);
   const fetchData = async () => {
     const URL = 'https://restcountries.com/v2/all?fields=alpha3Code,name';
     const countryResponse = await axios.get<Countries[]>(URL);
@@ -45,7 +45,7 @@ function App() {
                           key={Math.random()}
                           name={item.name}
                           onClick={() => {
-                            setalpha3Code(item.alpha3Code);
+                            setAlpha3Code(item.alpha3Code);
                           }}
                         />
                       )
