@@ -5,7 +5,7 @@ interface Props {
 }
 const CountryItem:React.FC<Props> = ({name, onClick}) => {
   return (
-    <li key={Math.random()} className="list-group-item" onClick={onClick}>{name}</li>
+    <li className="list-group-item" onClick={onClick}>{name}</li>
   );
 };
 
